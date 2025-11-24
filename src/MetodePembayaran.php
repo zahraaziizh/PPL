@@ -1,4 +1,5 @@
 <?php
+//INTEGRASI TESTING - TC03
 
 function pilihMetodePembayaran($metode): string {
     return "Metode pembayaran $metode berhasil dipilih";
