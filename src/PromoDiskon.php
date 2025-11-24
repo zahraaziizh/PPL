@@ -1,4 +1,5 @@
 <?php
+//INTEGRASI TESTING - TC04
 class PromoDiskon {
     private static $daftarPromo = [
         "PROMO10" => ["diskon" => 10, "expired" => "2025-12-31", "digunakan" => false],

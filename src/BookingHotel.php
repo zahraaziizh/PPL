@@ -1,4 +1,5 @@
 <?php
+//INTEGRASI TESTING - TC04
 require_once __DIR__ . '/PromoDiskon.php';
 
 function bookingHotel($lokasi, $checkin, $checkout, $jumlahKamar, ? string $kodePromo = null): array|string
