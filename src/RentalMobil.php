@@ -1,5 +1,7 @@
 <?php
-require_once __DIR__ . '/history.php'; 
+//require_once __DIR__ . '/history.php'; 
+require_once __DIR__ . '/Database.php'; 
+
 
 class RentalMobil {
     private $lokasi;
@@ -25,19 +27,35 @@ class RentalMobil {
     public function pilihMobil($mobil)
     {
         $daftarMobil = ["Avanza", "Innova", "Brio"];
-        if (!in_Array($mobil, $daftarMobil)){
+        if (!in_array($mobil, $daftarMobil)){
             return "Mobil tidak tersedia";
         }
 
-        $history = new history();
-        $history->tambahPemesananRental(
-            $mobil,
-            $this->lokasi?? 'default',
-            $this->startDate ?? 'now',
-            $this->endDate ?? 'later'
-        );
+        $data = [
+            'kategori' => 'rental mobil',
+            'tanggal' => date('Y-m-d'), // tanggal pemesanan
+            'detail' => [
+                'mobil' => $mobil,
+                'lokasi' => $this->lokasi ?? 'default',
+                'mulai' => $this->startDate ?? 'now',
+                'selesai' => $this->endDate ?? 'later'
+            ]
+        ];
+
+        $db = Database::getInstance()->getConnection();
+        $stmt = $db->prepare("
+            INSERT INTO orders (user_email, kategori, tanggal, detail)
+            VALUES (?, ?, ?, ?)
+        ");
+        $stmt->execute([
+            'laillanurulita@gmail.com',
+            $data['kategori'],
+            $data['tanggal'],
+            json_encode($data['detail']) // array → JSON string
+        ]);
 
         return "Mobil yang dipilih : $mobil";
     }
 }
+
 ?>

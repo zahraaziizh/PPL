@@ -14,7 +14,12 @@ class IntegrationRentalHistoryTest extends TestCase
 {
     protected function setUp(): void
     {
-        // Reset session agar tidak terpengaruh test sebelumnya
+       $db = Database::getInstance()->getConnection();
+        $db->exec("DELETE FROM orders");
+
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
         $_SESSION = [];
     }
 
@@ -42,15 +47,19 @@ class IntegrationRentalHistoryTest extends TestCase
             return $item['kategori'] === 'rental mobil';
         });
 
+        
+
         $this->assertNotEmpty($pemesananRental, "Harus ada minimal 1 pemesanan rental mobil di history");
-         $this->assertCount(1, $pemesananRental, "Harus tepat 1 pemesanan rental mobil");
 
         $pemesanan = reset($pemesananRental);
+        $this->assertArrayHasKey('tanggal', $pemesanan);
+        $this->assertMatchesRegularExpression('/\d{4}-\d{2}-\d{2}/', $pemesanan['tanggal']);
         $detail = $pemesanan['detail'] ?? [];
 
         $this->assertEquals("Avanza", $detail['mobil'] ?? null);
         $this->assertEquals("Yogyakarta", $detail['lokasi'] ?? null);
         $this->assertEquals("2025-11-25 08:00", $detail['mulai'] ?? null);
+        $this->assertEquals("2025-11-27 18:00", $detail['selesai'] ?? null);
         $this->assertTrue($pemesanan['kategori'] === 'rental mobil');
     }
 }

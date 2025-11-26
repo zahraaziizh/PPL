@@ -1,6 +1,6 @@
 <?php
 // src/Integration.php
-
+//session_start();
 require_once __DIR__ . '/Registrasi.php';
 require_once __DIR__ . '/Login.php';
 
